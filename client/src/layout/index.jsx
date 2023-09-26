@@ -54,7 +54,7 @@ const PredictSelection = () => {
     };
     try {
       const response = await axios.request(requestOptions);
-      console.log(response)
+      console.log(response);
     } catch (e) {
       console.error(e);
     }

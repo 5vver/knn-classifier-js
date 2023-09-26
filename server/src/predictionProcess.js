@@ -1,6 +1,6 @@
 // https://github.com/mljs/knn
 import KNN from "./core/knnClassifier.js";
-import {train_dataset, train_labels} from "./utils/coffeeTeaMeta.js";
+import { train_dataset, train_labels } from "./utils/coffeeTeaMeta.js";
 
 const knn = new KNN(train_dataset, train_labels, { k: 2 }); // consider 2 nearest neighbors
 export const fillAndPredictByOne = (metaObj, inputData) => {
@@ -12,7 +12,8 @@ export const fillAndPredictByOne = (metaObj, inputData) => {
     )
   )
     return "Invalid data provided";
-  if (metaObj === null || typeof metaObj !== "object") return "Invalid metaObj provided";
+  if (metaObj === null || typeof metaObj !== "object")
+    return "Invalid metaObj provided";
   const metaObjCopy = structuredClone(metaObj);
   const keys = Object.keys(metaObjCopy);
   for (let i = 0; i < inputData.length; i++)
@@ -33,4 +34,4 @@ export const fillAndPredictByMany = (metaObj, inputArray) => {
 const predict = (dataset) => {
   if (!Array.isArray(dataset)) return "Wrong data type provided";
   return knn.predict(dataset);
-}
+};
