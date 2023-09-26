@@ -7,10 +7,12 @@ export const fillAndPredictByOne = (metaObj, inputData) => {
   if (
     !(
       Array.isArray(inputData) &&
-      inputData.length === Object.keys(metaObj).length
+      inputData.length === Object.keys(metaObj).length &&
+      inputData.every((v) => typeof v === "number")
     )
   )
     return "Invalid data provided";
+  if (metaObj === null || typeof metaObj !== "object") return "Invalid metaObj provided";
   const metaObjCopy = structuredClone(metaObj);
   const keys = Object.keys(metaObjCopy);
   for (let i = 0; i < inputData.length; i++)

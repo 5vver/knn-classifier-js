@@ -2,7 +2,7 @@
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 /** Project import files */
-import { fillAndPredictByMany } from "./src/predictionProcess.js";
+import {fillAndPredictByMany, fillAndPredictByOne} from "./src/predictionProcess.js";
 import { teaCoffeeTestData } from "./src/utils/coffeeTeaMeta.js";
 
 require("dotenv").config();
@@ -18,9 +18,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+/** CORS */
+const cors = require('cors');
+app.use(cors());
+
 app.post("/api", (req, res) => {
   if (!req.body.data) return res.send("No data provided");
-  res.send(fillAndPredictByMany(teaCoffeeTestData, req.body.data));
+  const result = fillAndPredictByOne(teaCoffeeTestData, JSON.parse(req.body.data));
+  res.send(JSON.stringify(result));
 });
 
 app.get("/api", (req, res) => {
