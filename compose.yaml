@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    volumes:
+      - ./server:/app/server
+      - /server/node_modules
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client:/app/client
+      - /client/node_modules
+    ports:
+      - 5173:5173
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
