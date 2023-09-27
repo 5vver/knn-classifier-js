@@ -8,5 +8,8 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    host: '0.0.0.0', // needed for the Docker Container port mapping to work
+    strictPort: true,
+    port: 5173,
   },
 })
