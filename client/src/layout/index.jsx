@@ -28,6 +28,13 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+/** Assets */
+import genderImg from "../assets/gender.jpg";
+import getUpImg from "../assets/getup.jpg";
+import ageImg from "../assets/age.png";
+import employmentImg from "../assets/employment.jpg";
+import submitBackgroundImg from "../assets/submitBackground.jpg";
+
 const PredictSelection = () => {
   const [dataset, setDataset] = useState({
     sex: "0", // 0 - M, 1 - F
@@ -87,7 +94,7 @@ const PredictSelection = () => {
   return (
     <Container maxW={"7xl"} p="12">
       <Heading as="h1">
-        Hey! I'm going to try to guess your preferences in tea/coffee, please
+        Hey! I'm going to try to predict what you prefer to drink, tea or coffee, please
         provide me with information below:
       </Heading>
       <Box
@@ -112,9 +119,7 @@ const PredictSelection = () => {
             <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
               <Image
                 borderRadius="lg"
-                src={
-                  "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
-                }
+                src={genderImg}
                 alt="some good alt text"
                 objectFit="contain"
               />
@@ -175,10 +180,8 @@ const PredictSelection = () => {
               <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
                 <Image
                   transform="scale(1.0)"
-                  src={
-                    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
-                  }
-                  alt="some text"
+                  src={getUpImg}
+                  alt="sleep length"
                   objectFit="contain"
                   width="100%"
                   transition="0.3s ease-in-out"
@@ -188,7 +191,6 @@ const PredictSelection = () => {
                 />
               </Box>
             </Box>
-            {/*<BlogTags tags={['Engineering', 'Product']} marginTop={3} />*/}
             <Box
               display="flex"
               flex="1"
@@ -241,9 +243,7 @@ const PredictSelection = () => {
             <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
               <Image
                 borderRadius="lg"
-                src={
-                  "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
-                }
+                src={ageImg}
                 alt="some good alt text"
                 objectFit="contain"
               />
@@ -307,9 +307,7 @@ const PredictSelection = () => {
               <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
                 <Image
                   transform="scale(1.0)"
-                  src={
-                    "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
-                  }
+                  src={employmentImg}
                   alt="some text"
                   objectFit="contain"
                   width="100%"
@@ -381,7 +379,7 @@ const PredictSelection = () => {
         justifyContent="center"
         width="100%"
         py={12}
-        bgImage="url('https://bit.ly/2Z4KKcF')"
+        bgImage={submitBackgroundImg}
         bgPosition="center"
         bgRepeat="no-repeat"
         mb={2}
