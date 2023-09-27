@@ -27,6 +27,7 @@ app.use(cors());
 
 app.post("/api", (req, res) => {
   if (!req.body.data) return res.send("No data provided");
+  console.log(req.body.data)
   const result = fillAndPredictByOne(
     teaCoffeeTestData,
     JSON.parse(req.body.data),

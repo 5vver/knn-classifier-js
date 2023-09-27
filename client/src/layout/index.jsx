@@ -14,6 +14,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Progress,
   Radio,
   RadioGroup,
   Stack,
@@ -53,6 +54,16 @@ const PredictSelection = () => {
     onOpen,
   } = useDisclosure({ defaultIsOpen: false });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [predictedData, setPredictedData] = useState({
+    state: "awaiting",
+    result: null,
+  });
+
+  useEffect(() => {
+    if (isVisible) setTimeout(() => onClose(), 2500);
+  }, [isVisible]);
+
   const [alertMsg, setAlertMsg] = useState({ msg: null, status: "success" });
   const sendData = async () => {
     console.log("sending data");
@@ -73,10 +84,17 @@ const PredictSelection = () => {
       data: formdata,
     };
     try {
+      setIsLoading(true);
       const response = await axios.request(requestOptions);
-      console.log(response);
+      setPredictedData({
+        result: response.data > 0 ? "coffee" : "tea",
+        state: "processed",
+      });
     } catch (e) {
+      setPredictedData({ ...predictedData, state: "failed" });
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -94,8 +112,8 @@ const PredictSelection = () => {
   return (
     <Container maxW={"7xl"} p="12">
       <Heading as="h1">
-        Hey! I'm going to try to predict what you prefer to drink, tea or coffee, please
-        provide me with information below:
+        Hey! I'm going to try to predict what you prefer to drink, tea or
+        coffee, please provide me with information below:
       </Heading>
       <Box
         marginTop={{ base: "1", sm: "5" }}
@@ -373,6 +391,9 @@ const PredictSelection = () => {
           <NumberInputStepper></NumberInputStepper>
         </NumberInput>
       </VStack>
+      {isLoading && (
+        <Progress colorScheme="telegram" size="sm" isIndeterminate />
+      )}
       <Box
         display="flex"
         alignItems="center"
@@ -416,6 +437,24 @@ const PredictSelection = () => {
           </AlertTitle>
           <AlertDescription maxWidth="sm">{alertMsg.msg}</AlertDescription>
         </Alert>
+      )}
+      {predictedData.state === "processed" && predictedData.result && (
+        <>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            py={12}
+            mb={2}
+            marginTop={"2"}
+          >
+            <Text>
+              You prefer {predictedData.result} over a{" "}
+              {predictedData.result === "tea" ? "coffee" : "tea"}
+            </Text>
+          </Box>
+        </>
       )}
     </Container>
   );
