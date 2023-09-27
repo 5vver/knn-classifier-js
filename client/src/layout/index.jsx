@@ -1,7 +1,12 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
   ButtonGroup,
+  CloseButton,
   Container,
   Divider,
   Heading,
@@ -14,6 +19,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
   VStack,
   Wrap,
   WrapItem,
@@ -34,14 +40,21 @@ const PredictSelection = () => {
     travelTimeToWork: null, // numeric value - amount of hours to work/college place
   });
 
-  useEffect(() => {
-    console.log(dataset);
-  }, [dataset]);
+  const {
+    isOpen: isVisible,
+    onClose,
+    onOpen,
+  } = useDisclosure({ defaultIsOpen: false });
 
+  const [alertMsg, setAlertMsg] = useState({ msg: null, status: "success" });
   const sendData = async () => {
     console.log("sending data");
+    if (!validateDataset(dataset)) return;
     const formdata = new FormData();
-    formdata.append("data", JSON.stringify(Object.values(dataset)));
+    formdata.append(
+      "data",
+      JSON.stringify(Object.values(dataset).map((v) => +v)),
+    );
     const requestOptions = {
       mode: "no-cors",
       url: "http://localhost:3000/api",
@@ -58,6 +71,17 @@ const PredictSelection = () => {
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const validateDataset = (dataset) => {
+    const alertWithMsg = (msg, state) => {
+      setAlertMsg({ status: state ? "success" : "warning", msg });
+      onOpen();
+      return state;
+    };
+    if (typeof dataset === "object" && Object.values(dataset).some((v) => !v))
+      return alertWithMsg("All fields must be filled in!", false);
+    return alertWithMsg("Data has been sent!", true);
   };
 
   return (
@@ -369,6 +393,32 @@ const PredictSelection = () => {
           </Button>
         </ButtonGroup>
       </Box>
+      {isVisible && (
+        <Alert
+          status={alertMsg.status}
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="200px"
+        >
+          <CloseButton
+            alignSelf="flex-end"
+            position="relative"
+            right={0}
+            top={-5}
+            onClick={onClose}
+          />
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            {alertMsg.status === "warning"
+              ? "Your submission has failed!"
+              : "Success!"}
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">{alertMsg.msg}</AlertDescription>
+        </Alert>
+      )}
     </Container>
   );
 };
