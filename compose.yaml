@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./server:/app/server
-      - /server/node_modules
+      - node_modules:/app/node_modules
     ports:
       - 3000:3000
     networks:
@@ -19,14 +19,17 @@ services:
       context: ./client
       dockerfile: Dockerfile
     volumes:
-      - ./client:/app/client
-      - /client/node_modules
+      - ./client/src:/app/client/src
+      - ./client/index.html:/app/client/index.html
+      - node_modules:/app/client/node_modules
     ports:
       - 5173:5173
     depends_on:
       - server
     networks:
       - app-network
+volumes:
+  node_modules:
 
 networks:
   app-network:

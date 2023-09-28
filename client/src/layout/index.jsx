@@ -1,3 +1,13 @@
+/*
+  TODO:
+    1. !!Component decomposition;
+    2. setState(prev => ({prev..., val: ..}));
+    3. empty inputs red highlights;
+    4. requestOptions decompose;
+    5. Alert -> alert toast;
+    6. Alert setTimeout -> smooth close;
+*/
+
 import {
   Alert,
   AlertDescription,
@@ -90,6 +100,7 @@ const PredictSelection = () => {
         result: response.data > 0 ? "coffee" : "tea",
         state: "processed",
       });
+      console.log(predictedData)
     } catch (e) {
       setPredictedData({ ...predictedData, state: "failed" });
       console.error(e);
