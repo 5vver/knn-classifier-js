@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Image } from "@chakra-ui/react";
-import getUpImg from "../assets/getup.jpg";
 
 const ScalabaleImageBox = ({ imgSrc }) => {
   return (

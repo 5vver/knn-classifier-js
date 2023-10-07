@@ -36,7 +36,7 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
 /** Assets */
@@ -54,6 +54,10 @@ import CustomAlert from "../components/CustomAlert.jsx";
 import UseCustomAlert from "../hooks/useCustomAlert.js";
 import PredictionResultBox from "../components/PredictionResultBox.jsx";
 import LoadingProgressBar from "../components/LoadingProgressBar.jsx";
+import CustomRadioGroup from "../components/inputs/CustomRadioGroup.jsx";
+import CustomInputNumber from "../components/inputs/CustomInputNumber.jsx";
+
+export const PredictionContext = createContext(null);
 
 const PredictSelection = () => {
   const [dataset, setDataset] = useState({
@@ -74,6 +78,8 @@ const PredictSelection = () => {
   });
 
   const [isVisible, onClose, alertWithMsg, alertMsg] = UseCustomAlert();
+
+  useEffect(() => console.log(dataset), [dataset]);
 
   const sendData = async () => {
     console.log("sending data");
@@ -116,251 +122,212 @@ const PredictSelection = () => {
   };
 
   return (
-    <Container maxW={"7xl"} p="12">
-      <Heading as="h1">
-        Hey! I'm going to try to predict what you prefer to drink, tea or
-        coffee, please provide me with information below:
-      </Heading>
+    <PredictionContext.Provider value={{ dataset, setDataset }}>
+      <Container maxW={"7xl"} p="12">
+        <Heading as="h1">
+          Hey! I'm going to try to predict what you prefer to drink, tea or
+          coffee, please provide me with information below:
+        </Heading>
 
-      <Box
-        marginTop={{ base: "1", sm: "5" }}
-        display="flex"
-        flexDirection={{ base: "column", sm: "row" }}
-        justifyContent="space-between"
-      >
-        <ImageBox imgSrc={genderImg} />
-        {/*RADIOSELECTBOX*/}
         <Box
+          marginTop={{ base: "1", sm: "5" }}
           display="flex"
-          flex="1"
-          flexDirection="column"
-          justifyContent="center"
-          marginTop={{ base: "3", sm: "0" }}
+          flexDirection={{ base: "column", sm: "row" }}
+          justifyContent="space-between"
         >
-          <TextHeading fs={"4xl"} mt={"1"}>
-            What's your gender?
-          </TextHeading>
-          <RadioGroup
-            onChange={(e) => setDataset({ ...dataset, sex: e })}
-            value={dataset.sex}
+          <ImageBox imgSrc={genderImg} />
+          {/*RADIOSELECTBOX*/}
+          <Box
+            display="flex"
+            flex="1"
+            flexDirection="column"
+            justifyContent="center"
+            marginTop={{ base: "3", sm: "0" }}
           >
-            <Stack direction="row">
-              <Radio value="0">Male</Radio>
-              <Radio value="1">Female</Radio>
-            </Stack>
-          </RadioGroup>
-        </Box>
-      </Box>
-      <LargeHeading>What time do you get up?</LargeHeading>
-      {/*RADIOSELECT*/}
-      <RadioGroup
-        onChange={(e) => setDataset({ ...dataset, wakeTime: e })}
-        value={dataset.wakeTime}
-      >
-        <Stack direction="row">
-          <Radio value="0">Before 9AM</Radio>
-          <Radio value="1">After 9AM</Radio>
-        </Stack>
-      </RadioGroup>
-
-      <Divider marginTop="5" />
-
-      <Wrap spacing="30px" marginTop="5">
-        <WrapItem width={{ base: "100%", sm: "45%", md: "45%", lg: "30%" }}>
-          <Box w="100%">
-            {/*SCALABLEIMAGEBOX*/}
-            <ScalabaleImageBox imgSrc={getUpImg} />
-
-            <Box
-              display="flex"
-              flex="1"
-              flexDirection="column"
-              justifyContent="center"
-              marginTop={{ base: "3", sm: "0" }}
-            >
-              {/*TextHeading*/}
-              <TextHeading fs={"xl"}>What's your sleep length?</TextHeading>
-
-              <NumberInput
-                defaultValue={dataset.sleepLength}
-                max={20}
-                keepWithinRange={true}
-                clampValueOnBlur={true}
-                onChange={(e) => setDataset({ ...dataset, sleepLength: e })}
-                marginTop="2"
-              >
-                <NumberInputField />
-                <NumberInputStepper></NumberInputStepper>
-              </NumberInput>
-            </Box>
+            <TextHeading fs={"4xl"} mt={"1"}>
+              What's your gender?
+            </TextHeading>
+            <CustomRadioGroup />
+            {/*<RadioGroup*/}
+            {/*  onChange={(e) => setDataset({ ...dataset, sex: e })}*/}
+            {/*  value={dataset.sex}*/}
+            {/*>*/}
+            {/*  <Stack direction="row">*/}
+            {/*    <Radio value="0">Male</Radio>*/}
+            {/*    <Radio value="1">Female</Radio>*/}
+            {/*  </Stack>*/}
+            {/*</RadioGroup>*/}
           </Box>
-        </WrapItem>
-      </Wrap>
+        </Box>
+        <LargeHeading>What time do you get up?</LargeHeading>
+        {/*RADIOSELECT*/}
+        <RadioGroup
+          onChange={(e) => setDataset({ ...dataset, wakeTime: e })}
+          value={dataset.wakeTime}
+        >
+          <Stack direction="row">
+            <Radio value="0">Before 9AM</Radio>
+            <Radio value="1">After 9AM</Radio>
+          </Stack>
+        </RadioGroup>
 
-      {/*Second part of the form*/}
+        <Divider marginTop="5" />
 
-      <Box
-        marginTop={{ base: "1", sm: "5" }}
-        display="flex"
-        flexDirection={{ base: "column", sm: "row" }}
-        justifyContent="space-between"
-      >
+        <Wrap spacing="30px" marginTop="5">
+          <WrapItem width={{ base: "100%", sm: "45%", md: "45%", lg: "30%" }}>
+            <Box w="100%">
+              {/*SCALABLEIMAGEBOX*/}
+              <ScalabaleImageBox imgSrc={getUpImg} />
+
+              <Box
+                display="flex"
+                flex="1"
+                flexDirection="column"
+                justifyContent="center"
+                marginTop={{ base: "3", sm: "0" }}
+              >
+                {/*TextHeading*/}
+                <TextHeading fs={"xl"}>What's your sleep length?</TextHeading>
+                <CustomInputNumber param={"sleepLength"} limit={20} />
+              </Box>
+            </Box>
+          </WrapItem>
+        </Wrap>
+
+        {/*Second part of the form*/}
+
         <Box
+          marginTop={{ base: "1", sm: "5" }}
           display="flex"
-          flex="1"
-          marginRight="3"
-          position="relative"
-          alignItems="center"
+          flexDirection={{ base: "column", sm: "row" }}
+          justifyContent="space-between"
         >
           <Box
-            width={{ base: "100%", sm: "85%" }}
-            zIndex="2"
-            marginLeft={{ base: "0", sm: "5%" }}
-            marginTop="5%"
+            display="flex"
+            flex="1"
+            marginRight="3"
+            position="relative"
+            alignItems="center"
           >
-            <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
-              <Image
-                borderRadius="lg"
-                src={ageImg}
-                alt="some good alt text"
-                objectFit="contain"
-              />
-            </Box>
-          </Box>
-          <Box zIndex="1" width="100%" position="absolute" height="100%">
             <Box
-              bgGradient={useColorModeValue(
-                "radial(orange.600 1px, transparent 1px)",
-                "radial(orange.300 1px, transparent 1px)",
-              )}
-              backgroundSize="20px 20px"
-              opacity="0.4"
-              height="100%"
-            />
-          </Box>
-        </Box>
-        <Box
-          display="flex"
-          flex="1"
-          flexDirection="column"
-          justifyContent="center"
-          marginTop={{ base: "3", sm: "0" }}
-        >
-          <TextHeading mt={1} fs={"lg"}>
-            What's your age?
-          </TextHeading>
-
-          <NumberInput
-            defaultValue={dataset.age}
-            max={100}
-            keepWithinRange={true}
-            clampValueOnBlur={true}
-            onChange={(e) => setDataset({ ...dataset, age: e })}
-            marginTop="2"
-            maxW="60%"
-          >
-            <NumberInputField />
-            <NumberInputStepper></NumberInputStepper>
-          </NumberInput>
-        </Box>
-      </Box>
-      <LargeHeading>Do you have breakfast?</LargeHeading>
-      <RadioGroup
-        onChange={(e) => setDataset({ ...dataset, breakfast: e })}
-        value={dataset.breakfast}
-      >
-        <Stack direction="row">
-          <Radio value="0">No, I don't</Radio>
-          <Radio value="1">Yes, I actually do</Radio>
-        </Stack>
-      </RadioGroup>
-      <Divider marginTop="5" />
-      <Wrap spacing="30px" marginTop="5">
-        <WrapItem width={{ base: "100%", sm: "45%", md: "45%", lg: "30%" }}>
-          <Box w="100%">
-            <Box borderRadius="lg" overflow="hidden">
+              width={{ base: "100%", sm: "85%" }}
+              zIndex="2"
+              marginLeft={{ base: "0", sm: "5%" }}
+              marginTop="5%"
+            >
               <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
                 <Image
-                  transform="scale(1.0)"
-                  src={employmentImg}
-                  alt="some text"
+                  borderRadius="lg"
+                  src={ageImg}
+                  alt="some good alt text"
                   objectFit="contain"
-                  width="100%"
-                  transition="0.3s ease-in-out"
-                  _hover={{
-                    transform: "scale(1.05)",
-                  }}
                 />
               </Box>
             </Box>
-            <Box
-              display="flex"
-              flex="1"
-              flexDirection="column"
-              justifyContent="center"
-              marginTop={{ base: "3", sm: "0" }}
-            >
-              <TextHeading fs={"xl"} mt={2}>
-                What's your employment state?
-              </TextHeading>
-
-              <RadioGroup
-                onChange={(e) => setDataset({ ...dataset, employmentState: e })}
-                value={dataset.employmentState}
-              >
-                <Stack direction="row">
-                  <Radio value="0">Neither</Radio>
-                  <Radio value="1">I study</Radio>
-                  <Radio value="2">I work</Radio>
-                </Stack>
-              </RadioGroup>
+            <Box zIndex="1" width="100%" position="absolute" height="100%">
+              <Box
+                bgGradient={useColorModeValue(
+                  "radial(orange.600 1px, transparent 1px)",
+                  "radial(orange.300 1px, transparent 1px)",
+                )}
+                backgroundSize="20px 20px"
+                opacity="0.4"
+                height="100%"
+              />
             </Box>
           </Box>
-        </WrapItem>
-      </Wrap>
-
-      {/*Third part of the form*/}
-
-      <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
-        <LargeHeading>How many hours do you spend at work?</LargeHeading>
-        <NumberInput
-          defaultValue={dataset.workHours}
-          max={15}
-          keepWithinRange={true}
-          clampValueOnBlur={true}
-          onChange={(e) => setDataset({ ...dataset, workHours: e })}
-          marginTop="2"
+          <Box
+            display="flex"
+            flex="1"
+            flexDirection="column"
+            justifyContent="center"
+            marginTop={{ base: "3", sm: "0" }}
+          >
+            <TextHeading mt={1} fs={"lg"}>
+              What's your age?
+            </TextHeading>
+            <CustomInputNumber param={"age"} limit={120} />
+          </Box>
+        </Box>
+        <LargeHeading>Do you have breakfast?</LargeHeading>
+        <RadioGroup
+          onChange={(e) => setDataset({ ...dataset, breakfast: e })}
+          value={dataset.breakfast}
         >
-          <NumberInputField />
-          <NumberInputStepper></NumberInputStepper>
-        </NumberInput>
-        <LargeHeading mt={2}>
-          How long does it take you to get to work?
-        </LargeHeading>
+          <Stack direction="row">
+            <Radio value="0">No, I don't</Radio>
+            <Radio value="1">Yes, I actually do</Radio>
+          </Stack>
+        </RadioGroup>
+        <Divider marginTop="5" />
+        <Wrap spacing="30px" marginTop="5">
+          <WrapItem width={{ base: "100%", sm: "45%", md: "45%", lg: "30%" }}>
+            <Box w="100%">
+              <Box borderRadius="lg" overflow="hidden">
+                <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
+                  <Image
+                    transform="scale(1.0)"
+                    src={employmentImg}
+                    alt="some text"
+                    objectFit="contain"
+                    width="100%"
+                    transition="0.3s ease-in-out"
+                    _hover={{
+                      transform: "scale(1.05)",
+                    }}
+                  />
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flex="1"
+                flexDirection="column"
+                justifyContent="center"
+                marginTop={{ base: "3", sm: "0" }}
+              >
+                <TextHeading fs={"xl"} mt={2}>
+                  What's your employment state?
+                </TextHeading>
 
-        <NumberInput
-          defaultValue={dataset.travelTimeToWork}
-          max={15}
-          keepWithinRange={true}
-          clampValueOnBlur={true}
-          onChange={(e) => setDataset({ ...dataset, travelTimeToWork: e })}
-          marginTop="2"
-        >
-          <NumberInputField />
-          <NumberInputStepper></NumberInputStepper>
-        </NumberInput>
-      </VStack>
+                <RadioGroup
+                  onChange={(e) =>
+                    setDataset({ ...dataset, employmentState: e })
+                  }
+                  value={dataset.employmentState}
+                >
+                  <Stack direction="row">
+                    <Radio value="0">Neither</Radio>
+                    <Radio value="1">I study</Radio>
+                    <Radio value="2">I work</Radio>
+                  </Stack>
+                </RadioGroup>
+              </Box>
+            </Box>
+          </WrapItem>
+        </Wrap>
 
-      <LoadingProgressBar loadingState={isLoading}/>
-      <BoxButton onClick={sendData} bgImg={submitBackgroundImg} />
-      <CustomAlert
-        msg={alertMsg.msg}
-        status={alertMsg.status}
-        onCloseEvent={onClose}
-        isVisible={isVisible}
-      />
-      <PredictionResultBox predictedData />
-    </Container>
+        {/*Third part of the form*/}
+
+        <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
+          <LargeHeading>How many hours do you spend at work?</LargeHeading>
+          <CustomInputNumber param={"workHours"} limit={15} />
+          <LargeHeading mt={2}>
+            How long does it take you to get to work?
+          </LargeHeading>
+          <CustomInputNumber param={"travelTimeToWork"} limit={15} />
+        </VStack>
+
+        <LoadingProgressBar loadingState={isLoading} />
+        <BoxButton onClick={sendData} bgImg={submitBackgroundImg} />
+        <CustomAlert
+          msg={alertMsg.msg}
+          status={alertMsg.status}
+          onCloseEvent={onClose}
+          isVisible={isVisible}
+        />
+        <PredictionResultBox predictedData />
+      </Container>
+    </PredictionContext.Provider>
   );
 };
 
