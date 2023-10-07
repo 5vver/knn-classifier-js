@@ -45,6 +45,15 @@ import getUpImg from "../assets/getup.jpg";
 import ageImg from "../assets/age.png";
 import employmentImg from "../assets/employment.jpg";
 import submitBackgroundImg from "../assets/submitBackground.jpg";
+import ImageBox from "../components/ImageBox.jsx";
+import ScalabaleImageBox from "../components/ScalabaleImageBox.jsx";
+import TextHeading from "../components/TextHeading.jsx";
+import LargeHeading from "../components/LargeHeading.jsx";
+import BoxButton from "../components/BoxButton.jsx";
+import CustomAlert from "../components/CustomAlert.jsx";
+import UseCustomAlert from "../hooks/useCustomAlert.js";
+import PredictionResultBox from "../components/PredictionResultBox.jsx";
+import LoadingProgressBar from "../components/LoadingProgressBar.jsx";
 
 const PredictSelection = () => {
   const [dataset, setDataset] = useState({
@@ -58,23 +67,14 @@ const PredictSelection = () => {
     travelTimeToWork: null, // numeric value - amount of hours to work/college place
   });
 
-  const {
-    isOpen: isVisible,
-    onClose,
-    onOpen,
-  } = useDisclosure({ defaultIsOpen: false });
-
   const [isLoading, setIsLoading] = useState(false);
   const [predictedData, setPredictedData] = useState({
     state: "awaiting",
     result: null,
   });
 
-  useEffect(() => {
-    if (isVisible) setTimeout(() => onClose(), 2500);
-  }, [isVisible]);
+  const [isVisible, onClose, alertWithMsg, alertMsg] = UseCustomAlert();
 
-  const [alertMsg, setAlertMsg] = useState({ msg: null, status: "success" });
   const sendData = async () => {
     console.log("sending data");
     if (!validateDataset(dataset)) return;
@@ -100,7 +100,7 @@ const PredictSelection = () => {
         result: response.data > 0 ? "coffee" : "tea",
         state: "processed",
       });
-      console.log(predictedData)
+      console.log(predictedData);
     } catch (e) {
       setPredictedData({ ...predictedData, state: "failed" });
       console.error(e);
@@ -110,11 +110,6 @@ const PredictSelection = () => {
   };
 
   const validateDataset = (dataset) => {
-    const alertWithMsg = (msg, state) => {
-      setAlertMsg({ status: state ? "success" : "warning", msg });
-      onOpen();
-      return state;
-    };
     if (typeof dataset === "object" && Object.values(dataset).some((v) => !v))
       return alertWithMsg("All fields must be filled in!", false);
     return alertWithMsg("Data has been sent!", true);
@@ -126,46 +121,15 @@ const PredictSelection = () => {
         Hey! I'm going to try to predict what you prefer to drink, tea or
         coffee, please provide me with information below:
       </Heading>
+
       <Box
         marginTop={{ base: "1", sm: "5" }}
         display="flex"
         flexDirection={{ base: "column", sm: "row" }}
         justifyContent="space-between"
       >
-        <Box
-          display="flex"
-          flex="1"
-          marginRight="3"
-          position="relative"
-          alignItems="center"
-        >
-          <Box
-            width={{ base: "100%", sm: "85%" }}
-            zIndex="2"
-            marginLeft={{ base: "0", sm: "5%" }}
-            marginTop="5%"
-          >
-            <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
-              <Image
-                borderRadius="lg"
-                src={genderImg}
-                alt="some good alt text"
-                objectFit="contain"
-              />
-            </Box>
-          </Box>
-          <Box zIndex="1" width="100%" position="absolute" height="100%">
-            <Box
-              bgGradient={useColorModeValue(
-                "radial(orange.600 1px, transparent 1px)",
-                "radial(orange.300 1px, transparent 1px)",
-              )}
-              backgroundSize="20px 20px"
-              opacity="0.4"
-              height="100%"
-            />
-          </Box>
-        </Box>
+        <ImageBox imgSrc={genderImg} />
+        {/*RADIOSELECTBOX*/}
         <Box
           display="flex"
           flex="1"
@@ -173,11 +137,9 @@ const PredictSelection = () => {
           justifyContent="center"
           marginTop={{ base: "3", sm: "0" }}
         >
-          <Heading marginTop="1">
-            <Text textDecoration="none" _hover={{ textDecoration: "none" }}>
-              What's your gender?
-            </Text>
-          </Heading>
+          <TextHeading fs={"4xl"} mt={"1"}>
+            What's your gender?
+          </TextHeading>
           <RadioGroup
             onChange={(e) => setDataset({ ...dataset, sex: e })}
             value={dataset.sex}
@@ -189,9 +151,8 @@ const PredictSelection = () => {
           </RadioGroup>
         </Box>
       </Box>
-      <Heading as="h2" marginTop="5">
-        What time do you get up?
-      </Heading>
+      <LargeHeading>What time do you get up?</LargeHeading>
+      {/*RADIOSELECT*/}
       <RadioGroup
         onChange={(e) => setDataset({ ...dataset, wakeTime: e })}
         value={dataset.wakeTime}
@@ -201,25 +162,15 @@ const PredictSelection = () => {
           <Radio value="1">After 9AM</Radio>
         </Stack>
       </RadioGroup>
+
       <Divider marginTop="5" />
+
       <Wrap spacing="30px" marginTop="5">
         <WrapItem width={{ base: "100%", sm: "45%", md: "45%", lg: "30%" }}>
           <Box w="100%">
-            <Box borderRadius="lg" overflow="hidden">
-              <Box textDecoration="none" _hover={{ textDecoration: "none" }}>
-                <Image
-                  transform="scale(1.0)"
-                  src={getUpImg}
-                  alt="sleep length"
-                  objectFit="contain"
-                  width="100%"
-                  transition="0.3s ease-in-out"
-                  _hover={{
-                    transform: "scale(1.05)",
-                  }}
-                />
-              </Box>
-            </Box>
+            {/*SCALABLEIMAGEBOX*/}
+            <ScalabaleImageBox imgSrc={getUpImg} />
+
             <Box
               display="flex"
               flex="1"
@@ -227,11 +178,9 @@ const PredictSelection = () => {
               justifyContent="center"
               marginTop={{ base: "3", sm: "0" }}
             >
-              <Heading fontSize="xl" marginTop="2">
-                <Text textDecoration="none" _hover={{ textDecoration: "none" }}>
-                  What's your sleep length?
-                </Text>
-              </Heading>
+              {/*TextHeading*/}
+              <TextHeading fs={"xl"}>What's your sleep length?</TextHeading>
+
               <NumberInput
                 defaultValue={dataset.sleepLength}
                 max={20}
@@ -297,11 +246,10 @@ const PredictSelection = () => {
           justifyContent="center"
           marginTop={{ base: "3", sm: "0" }}
         >
-          <Heading marginTop="1">
-            <Text textDecoration="none" _hover={{ textDecoration: "none" }}>
-              What's your age?
-            </Text>
-          </Heading>
+          <TextHeading mt={1} fs={"lg"}>
+            What's your age?
+          </TextHeading>
+
           <NumberInput
             defaultValue={dataset.age}
             max={100}
@@ -316,9 +264,7 @@ const PredictSelection = () => {
           </NumberInput>
         </Box>
       </Box>
-      <Heading as="h2" marginTop="5">
-        Do you have breakfast?
-      </Heading>
+      <LargeHeading>Do you have breakfast?</LargeHeading>
       <RadioGroup
         onChange={(e) => setDataset({ ...dataset, breakfast: e })}
         value={dataset.breakfast}
@@ -354,11 +300,10 @@ const PredictSelection = () => {
               justifyContent="center"
               marginTop={{ base: "3", sm: "0" }}
             >
-              <Heading fontSize="xl" marginTop="2">
-                <Text textDecoration="none" _hover={{ textDecoration: "none" }}>
-                  What's your employment state?
-                </Text>
-              </Heading>
+              <TextHeading fs={"xl"} mt={2}>
+                What's your employment state?
+              </TextHeading>
+
               <RadioGroup
                 onChange={(e) => setDataset({ ...dataset, employmentState: e })}
                 value={dataset.employmentState}
@@ -377,7 +322,7 @@ const PredictSelection = () => {
       {/*Third part of the form*/}
 
       <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
-        <Heading as="h2">How many hours do you spend at work?</Heading>
+        <LargeHeading>How many hours do you spend at work?</LargeHeading>
         <NumberInput
           defaultValue={dataset.workHours}
           max={15}
@@ -389,7 +334,10 @@ const PredictSelection = () => {
           <NumberInputField />
           <NumberInputStepper></NumberInputStepper>
         </NumberInput>
-        <Heading as="h6">How long does it take you to get to work?</Heading>
+        <LargeHeading mt={2}>
+          How long does it take you to get to work?
+        </LargeHeading>
+
         <NumberInput
           defaultValue={dataset.travelTimeToWork}
           max={15}
@@ -402,71 +350,16 @@ const PredictSelection = () => {
           <NumberInputStepper></NumberInputStepper>
         </NumberInput>
       </VStack>
-      {isLoading && (
-        <Progress colorScheme="telegram" size="sm" isIndeterminate />
-      )}
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        width="100%"
-        py={12}
-        bgImage={submitBackgroundImg}
-        bgPosition="center"
-        bgRepeat="no-repeat"
-        mb={2}
-        marginTop={"2"}
-      >
-        <ButtonGroup gap="4">
-          <Button onClick={sendData} colorScheme="telegram" variant="solid">
-            Send
-          </Button>
-        </ButtonGroup>
-      </Box>
-      {isVisible && (
-        <Alert
-          status={alertMsg.status}
-          variant="subtle"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <CloseButton
-            alignSelf="flex-end"
-            position="relative"
-            right={0}
-            top={-5}
-            onClick={onClose}
-          />
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            {alertMsg.status === "warning"
-              ? "Your submission has failed!"
-              : "Success!"}
-          </AlertTitle>
-          <AlertDescription maxWidth="sm">{alertMsg.msg}</AlertDescription>
-        </Alert>
-      )}
-      {predictedData.state === "processed" && predictedData.result && (
-        <>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            py={12}
-            mb={2}
-            marginTop={"2"}
-          >
-            <Text>
-              You prefer {predictedData.result} over a{" "}
-              {predictedData.result === "tea" ? "coffee" : "tea"}
-            </Text>
-          </Box>
-        </>
-      )}
+
+      <LoadingProgressBar loadingState={isLoading}/>
+      <BoxButton onClick={sendData} bgImg={submitBackgroundImg} />
+      <CustomAlert
+        msg={alertMsg.msg}
+        status={alertMsg.status}
+        onCloseEvent={onClose}
+        isVisible={isVisible}
+      />
+      <PredictionResultBox predictedData />
     </Container>
   );
 };
