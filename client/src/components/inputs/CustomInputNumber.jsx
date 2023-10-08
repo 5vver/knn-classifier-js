@@ -15,7 +15,7 @@ const CustomInputNumber = ({ variable, limit }) => {
       max={limit}
       keepWithinRange={true}
       clampValueOnBlur={true}
-      onChange={(e) => setDataset({ ...dataset, [variable]: e })}
+      onChange={(e) => setDataset(prev => ({ ...prev, [variable]: e }))}
       marginTop="2"
     >
       <NumberInputField />

@@ -7,7 +7,7 @@ const CustomRadioGroup = ({ radioList = [], variable }) => {
   const { dataset, setDataset } = predictComponentContext;
   return (
     <RadioGroup
-      onChange={(e) => setDataset({ ...dataset, [variable]: e })}
+      onChange={(e) => setDataset(prev => ({ ...prev, [variable]: e }))}
       value={dataset[variable]}
     >
       <Stack direction="row">

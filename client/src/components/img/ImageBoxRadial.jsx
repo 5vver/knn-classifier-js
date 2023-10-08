@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Image, useColorModeValue } from "@chakra-ui/react";
 
-const ImageBox = ({ imgSrc }) => {
+const ImageBoxRadial = ({ imgSrc }) => {
   return (
     <Box
       display="flex"
@@ -40,4 +40,4 @@ const ImageBox = ({ imgSrc }) => {
   );
 };
 
-export default ImageBox;
+export default ImageBoxRadial;
