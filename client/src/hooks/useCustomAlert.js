@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 
-const UseCustomAlert = () => {
+const useCustomAlert = () => {
   const {
     isOpen: isVisible,
     onClose,
@@ -19,4 +19,4 @@ const UseCustomAlert = () => {
   return [isVisible, onClose, alertWithMsg, alertMsg];
 };
 
-export default UseCustomAlert;
+export default useCustomAlert;

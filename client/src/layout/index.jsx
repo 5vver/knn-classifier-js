@@ -9,28 +9,12 @@
 */
 
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
   Box,
-  Button,
-  ButtonGroup,
-  CloseButton,
   Container,
   Divider,
   Heading,
   Image,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Progress,
-  Radio,
-  RadioGroup,
-  Stack,
-  Text,
   useColorModeValue,
-  useDisclosure,
   VStack,
   Wrap,
   WrapItem,
@@ -51,7 +35,7 @@ import TextHeading from "../components/TextHeading.jsx";
 import LargeHeading from "../components/LargeHeading.jsx";
 import BoxButton from "../components/BoxButton.jsx";
 import CustomAlert from "../components/CustomAlert.jsx";
-import UseCustomAlert from "../hooks/useCustomAlert.js";
+import useCustomAlert from "../hooks/useCustomAlert.js";
 import PredictionResultBox from "../components/PredictionResultBox.jsx";
 import LoadingProgressBar from "../components/LoadingProgressBar.jsx";
 import CustomRadioGroup from "../components/inputs/CustomRadioGroup.jsx";
@@ -77,7 +61,7 @@ const PredictSelection = () => {
     result: null,
   });
 
-  const [isVisible, onClose, alertWithMsg, alertMsg] = UseCustomAlert();
+  const [isVisible, onClose, alertWithMsg, alertMsg] = useCustomAlert();
 
   useEffect(() => console.log(dataset), [dataset]);
 
@@ -147,29 +131,14 @@ const PredictSelection = () => {
             <TextHeading fs={"4xl"} mt={"1"}>
               What's your gender?
             </TextHeading>
-            <CustomRadioGroup />
-            {/*<RadioGroup*/}
-            {/*  onChange={(e) => setDataset({ ...dataset, sex: e })}*/}
-            {/*  value={dataset.sex}*/}
-            {/*>*/}
-            {/*  <Stack direction="row">*/}
-            {/*    <Radio value="0">Male</Radio>*/}
-            {/*    <Radio value="1">Female</Radio>*/}
-            {/*  </Stack>*/}
-            {/*</RadioGroup>*/}
+            <CustomRadioGroup radioList={["Male", "Female"]} variable={"sex"} />
           </Box>
         </Box>
         <LargeHeading>What time do you get up?</LargeHeading>
-        {/*RADIOSELECT*/}
-        <RadioGroup
-          onChange={(e) => setDataset({ ...dataset, wakeTime: e })}
-          value={dataset.wakeTime}
-        >
-          <Stack direction="row">
-            <Radio value="0">Before 9AM</Radio>
-            <Radio value="1">After 9AM</Radio>
-          </Stack>
-        </RadioGroup>
+        <CustomRadioGroup
+          radioList={["Before 9AM", "After 9AM"]}
+          variable={"wakeTime"}
+        />
 
         <Divider marginTop="5" />
 
@@ -188,7 +157,7 @@ const PredictSelection = () => {
               >
                 {/*TextHeading*/}
                 <TextHeading fs={"xl"}>What's your sleep length?</TextHeading>
-                <CustomInputNumber param={"sleepLength"} limit={20} />
+                <CustomInputNumber variable={"sleepLength"} limit={20} />
               </Box>
             </Box>
           </WrapItem>
@@ -246,19 +215,14 @@ const PredictSelection = () => {
             <TextHeading mt={1} fs={"lg"}>
               What's your age?
             </TextHeading>
-            <CustomInputNumber param={"age"} limit={120} />
+            <CustomInputNumber variable={"age"} limit={120} />
           </Box>
         </Box>
         <LargeHeading>Do you have breakfast?</LargeHeading>
-        <RadioGroup
-          onChange={(e) => setDataset({ ...dataset, breakfast: e })}
-          value={dataset.breakfast}
-        >
-          <Stack direction="row">
-            <Radio value="0">No, I don't</Radio>
-            <Radio value="1">Yes, I actually do</Radio>
-          </Stack>
-        </RadioGroup>
+        <CustomRadioGroup
+          radioList={["No, I don't", "Yes, I actually do"]}
+          variable={"breakfast"}
+        />
         <Divider marginTop="5" />
         <Wrap spacing="30px" marginTop="5">
           <WrapItem width={{ base: "100%", sm: "45%", md: "45%", lg: "30%" }}>
@@ -288,19 +252,10 @@ const PredictSelection = () => {
                 <TextHeading fs={"xl"} mt={2}>
                   What's your employment state?
                 </TextHeading>
-
-                <RadioGroup
-                  onChange={(e) =>
-                    setDataset({ ...dataset, employmentState: e })
-                  }
-                  value={dataset.employmentState}
-                >
-                  <Stack direction="row">
-                    <Radio value="0">Neither</Radio>
-                    <Radio value="1">I study</Radio>
-                    <Radio value="2">I work</Radio>
-                  </Stack>
-                </RadioGroup>
+                <CustomRadioGroup
+                  radioList={["Neither", "I study", "I work"]}
+                  variable={"employmentState"}
+                />
               </Box>
             </Box>
           </WrapItem>
@@ -310,11 +265,11 @@ const PredictSelection = () => {
 
         <VStack paddingTop="40px" spacing="2" alignItems="flex-start">
           <LargeHeading>How many hours do you spend at work?</LargeHeading>
-          <CustomInputNumber param={"workHours"} limit={15} />
+          <CustomInputNumber variable={"workHours"} limit={15} />
           <LargeHeading mt={2}>
             How long does it take you to get to work?
           </LargeHeading>
-          <CustomInputNumber param={"travelTimeToWork"} limit={15} />
+          <CustomInputNumber variable={"travelTimeToWork"} limit={15} />
         </VStack>
 
         <LoadingProgressBar loadingState={isLoading} />
